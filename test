@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -219,6 +219,39 @@
             margin-bottom: 10px;
         }
 
+        /* AI News Section */
+        .ai-news-section {
+            margin-bottom: 40px;
+            background: rgba(255,255,255,0.92);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .ai-news-section h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: #333;
+        }
+        .ai-news-list {
+            list-style: none;
+        }
+        .ai-news-list li {
+            margin-bottom: 12px;
+            color: #555;
+        }
+        .ai-news-list a {
+            color: #667eea;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .ai-news-list a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
@@ -230,6 +263,9 @@
             
             .news-grid {
                 grid-template-columns: 1fr;
+            }
+            .ai-news-section {
+                padding: 16px;
             }
         }
     </style>
@@ -264,14 +300,22 @@
                     <select id="category" name="category" required>
                         <option value="">Select Category</option>
                         <option value="uktv">UKTV</option>
-                        <option value="tech-giants">Tech Giants (up to no good)</option>
+                        <option value="tech-giants">Tech Giants</option>
                         <option value="tv-stories">TV Stories</option>
                         <option value="general-news">General News</option>
+                        <option value="ai-news">AI News</option>
                     </select>
                 </div>
                 
                 <button type="submit" class="btn">Add Story</button>
             </form>
+        </div>
+
+        <div class="ai-news-section" id="aiNewsSection">
+            <h2>AI News</h2>
+            <ul class="ai-news-list" id="aiNewsList">
+                <!-- AI News stories will be rendered here -->
+            </ul>
         </div>
 
         <div id="newsContainer">
@@ -288,6 +332,8 @@
 
         const newsForm = document.getElementById('newsForm');
         const newsContainer = document.getElementById('newsContainer');
+        const aiNewsSection = document.getElementById('aiNewsSection');
+        const aiNewsList = document.getElementById('aiNewsList');
 
         newsForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -311,7 +357,27 @@
         });
 
         function renderNews() {
-            if (newsStories.length === 0) {
+            // AI News Section
+            const aiStories = newsStories.filter(s => s.category === 'ai-news');
+            if (aiStories.length === 0) {
+                aiNewsList.innerHTML = '<li>No AI news stories yet.</li>';
+            } else {
+                aiNewsList.innerHTML = '';
+                aiStories.forEach(story => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <a href="${story.url}" target="_blank" rel="noopener noreferrer">${story.title}</a>
+                        ${story.description ? ` - <span>${story.description}</span>` : ''}
+                        <span style="color:#888; font-size:12px;"> (Added: ${story.timestamp})</span>
+                        <button class="delete-btn" style="margin-left:8px;" onclick="deleteStory(${story.id})">Delete</button>
+                    `;
+                    aiNewsList.appendChild(li);
+                });
+            }
+
+            // Non-AI Stories
+            const otherStories = newsStories.filter(s => s.category !== 'ai-news');
+            if (otherStories.length === 0) {
                 newsContainer.innerHTML = `
                     <div class="empty-state">
                         <h3>No stories yet</h3>
@@ -324,11 +390,11 @@
             const newsGrid = document.createElement('div');
             newsGrid.className = 'news-grid';
             
-            newsStories.forEach(story => {
+            otherStories.forEach(story => {
                 const newsCard = document.createElement('div');
                 newsCard.className = 'news-card';
                 newsCard.innerHTML = `
-                    <div class="news-category">${story.category}</div>
+                    <div class="news-category">${getCategoryLabel(story.category)}</div>
                     <h3 class="news-title">
                         <a href="${story.url}" target="_blank" rel="noopener noreferrer">
                             ${story.title}
@@ -347,7 +413,19 @@
             newsContainer.appendChild(newsGrid);
         }
 
-        function deleteStory(id) {
+        function getCategoryLabel(category) {
+            switch (category) {
+                case 'uktv': return 'UKTV';
+                case 'tech-giants': return 'Tech Giants';
+                case 'tv-stories': return 'TV Stories';
+                case 'general-news': return 'General News';
+                case 'ai-news': return 'AI News';
+                default: return category;
+            }
+        }
+
+        // Make deleteStory global
+        window.deleteStory = function(id) {
             newsStories = newsStories.filter(story => story.id !== id);
             renderNews();
         }
