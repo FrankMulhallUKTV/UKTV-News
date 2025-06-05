@@ -5,7 +5,233 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UKTV Industry News - Your Daily News Aggregator</title>
     <style>
-        /* [styles omitted for brevity—use the same as previous message] */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        .add-story-section {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .news-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .news-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .news-category {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+        }
+
+        .news-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .news-title a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .news-title a:hover {
+            color: #667eea;
+        }
+
+        .news-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: #888;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .delete-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: #ff3742;
+            transform: scale(1.05);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -22,14 +248,17 @@
                     <label for="title">Story Title</label>
                     <input type="text" id="title" name="title" required placeholder="Enter the news story title">
                 </div>
+                
                 <div class="form-group">
                     <label for="url">Story URL</label>
                     <input type="url" id="url" name="url" required placeholder="https://example.com/news-article">
                 </div>
+                
                 <div class="form-group">
                     <label for="description">Description</label>
                     <textarea id="description" name="description" placeholder="Brief description of the story (optional)"></textarea>
                 </div>
+                
                 <div class="form-group">
                     <label for="category">Category</label>
                     <select id="category" name="category" required>
@@ -37,19 +266,13 @@
                         <option value="uktv">UKTV</option>
                         <option value="tech-giants">Tech Giants</option>
                         <option value="tv-stories">TV Stories</option>
+                        <option value="tv-stories">AI News</option>
                         <option value="general-news">General News</option>
-                        <option value="ai-news">AI News</option>
                     </select>
                 </div>
+                
                 <button type="submit" class="btn">Add Story</button>
             </form>
-        </div>
-
-        <div class="ai-news-section" id="aiNewsSection">
-            <h2>AI News</h2>
-            <ul class="ai-news-list" id="aiNewsList">
-                <!-- AI News stories will be rendered here -->
-            </ul>
         </div>
 
         <div id="newsContainer">
@@ -61,7 +284,77 @@
     </div>
 
     <script>
-        // [JavaScript code as in previous response]
+        let newsStories = [];
+        let nextId = 1;
+
+        const newsForm = document.getElementById('newsForm');
+        const newsContainer = document.getElementById('newsContainer');
+
+        newsForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(newsForm);
+            const story = {
+                id: nextId++,
+                title: formData.get('title'),
+                url: formData.get('url'),
+                description: formData.get('description'),
+                category: formData.get('category'),
+                timestamp: new Date().toLocaleString()
+            };
+            
+            newsStories.unshift(story);
+            renderNews();
+            newsForm.reset();
+            
+            // Smooth scroll to news section
+            newsContainer.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        function renderNews() {
+            if (newsStories.length === 0) {
+                newsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No stories yet</h3>
+                        <p>Add your first news story using the form above</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const newsGrid = document.createElement('div');
+            newsGrid.className = 'news-grid';
+            
+            newsStories.forEach(story => {
+                const newsCard = document.createElement('div');
+                newsCard.className = 'news-card';
+                newsCard.innerHTML = `
+                    <div class="news-category">${story.category}</div>
+                    <h3 class="news-title">
+                        <a href="${story.url}" target="_blank" rel="noopener noreferrer">
+                            ${story.title}
+                        </a>
+                    </h3>
+                    ${story.description ? `<p class="news-description">${story.description}</p>` : ''}
+                    <div class="news-meta">
+                        <span>Added: ${story.timestamp}</span>
+                        <button class="delete-btn" onclick="deleteStory(${story.id})">Delete</button>
+                    </div>
+                `;
+                newsGrid.appendChild(newsCard);
+            });
+            
+            newsContainer.innerHTML = '';
+            newsContainer.appendChild(newsGrid);
+        }
+
+        function deleteStory(id) {
+            newsStories = newsStories.filter(story => story.id !== id);
+            renderNews();
+        }
+
+        // Initialize
+        renderNews();
     </script>
 </body>
 </html>
